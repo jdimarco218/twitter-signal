@@ -9,6 +9,7 @@ export class PollController {
         var timer = setInterval(() => {
             if (this.isPolling) {
                 console.log('poll!');
+                this.pollService.poll();
             }
         }, 1000);
     }
