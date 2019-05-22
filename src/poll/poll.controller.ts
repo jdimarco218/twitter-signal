@@ -11,7 +11,7 @@ export class PollController {
                 console.log('poll!');
                 this.pollService.poll();
             }
-        }, 1000);
+        }, 1100);
     }
 
     @Get('/start')

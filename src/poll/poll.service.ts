@@ -15,7 +15,7 @@ export class PollService {
             access_token_secret: config.default.access_token_secret
         })
 
-        this.params = { screen_name: config.default.homeTimelineScreenName, since_id: '1130604954509553665' };
+        this.params = { screen_name: config.default.homeTimelineScreenName, count: '1' };
     }
 
     startPoll(): string {
@@ -27,9 +27,11 @@ export class PollService {
     }
 
     poll(): void {
-        this.client.get('statuses/home_timeline', this.params, function (error, tweets, response) {
+        this.client.get('statuses/user_timeline', this.params, function (error, tweets, response) {
             if (!error) {
-                console.log(tweets);
+                console.log(tweets[0].text);
+            } else {
+                console.log('Error: ' + error);
             }
         })
     }
