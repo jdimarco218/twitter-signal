@@ -6,8 +6,8 @@ export class OrdersController {
     constructor(private readonly ordersService: OrdersService) {}
 
     @Get('/buy')
-    buy(): string {
+    buy() {
         console.log('Buy!');
-        return this.ordersService.buy();
+        return this.ordersService.buy('ZRX');
     }
 }
