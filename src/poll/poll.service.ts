@@ -28,14 +28,21 @@ export class PollService {
         return 'Stopping Poll!';
     }
 
+    setSinceId(newSinceId): void {
+        this.params.since_id = newSinceId;
+    }
+
     poll(): void {
+        var that = this;
         this.client.get('statuses/user_timeline', this.params, function (error, tweets, response) {
             if (!error) {
                 if (tweets[0] && tweets[0].text) {
-                    const tweet = tweets[0].text;
-                    const ticker = tweet.slice(1, tweet.indexOf(' '));
-                    if (allowed_tickers.indexOf(ticker) > -1 && tweet.indexOf('Buy') > -1) {
+                    const tweetText = tweets[0].text;
+                    const ticker = tweetText.slice(1, tweetText.indexOf(' '));
+                    if (allowed_tickers.indexOf(ticker) > -1 && tweetText.indexOf('Buy') > -1) {
                         console.log("BUY SIGNAL!!!! [" + ticker + "]");
+                        console.log("tweet id: " + tweets[0].id);
+                        that.setSinceId(tweets[0].id);
                     }
                 } else {
                     console.log('No tweets.');

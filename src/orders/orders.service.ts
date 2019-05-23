@@ -1,15 +1,18 @@
-import { Injectable, HttpService } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as config from '../config/keys';
-import { map } from 'rxjs/operators';
 const crypto = require('crypto');
 const axios = require('axios');
 
 @Injectable()
 export class OrdersService {
-    constructor(private readonly httpService: HttpService) {}
+    constructor() { }
 
     buy(symbol) {
-        const baseTradeUrl = 'https://api.binance.com/api/v3/order/test?';
+        const baseTradeUrl = 'https://api.binance.com/api/v3/order/test';
+
+        //
+        // Create query string
+        //
         const baseQueryString = `quantity=100&recvWindow=10000&symbol=${symbol}BTC&side=BUY&type=MARKET&timestamp=${(new Date).getTime()}`;
         const hmac = crypto.createHmac('sha256', config.default.binSecretKey);
         hmac.update(baseQueryString);
@@ -17,19 +20,19 @@ export class OrdersService {
         const signatureParam = `&signature=${digest}`;
         const queryString = baseQueryString + signatureParam;
 
-        const fullUrl = baseTradeUrl + queryString;
-        const headers = {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-MBX-APIKEY': config.default.binApiKey
-        }
+        const fullUrl = baseTradeUrl + '?' + queryString;
 
         console.log("POST to: " + fullUrl);
-        console.log("headers: " + JSON.stringify(headers));
-        return axios.post(fullUrl, {headers: headers}).then(res => {
-            console.log("Post res: " + JSON.stringify(res));
+        return axios.post(fullUrl, null, {
+            headers: {
+                'X-MBX-APIKEY': config.default.binApiKey,
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+        }).then(res => {
+            console.log("Post successful.");
+            return res.status;
         }).catch(e => {
-            console.log("Error posting" + e);
-            console.log("response: ",e.response.data);
+            console.log(e);
         });
     }
 }
