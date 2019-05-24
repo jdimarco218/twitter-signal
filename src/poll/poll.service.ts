@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { OrdersService } from '../orders/orders.service';
 import * as config from '../config/keys';
 
 const allowed_tickers: string[] = config.default.allowed_tickers;
@@ -8,7 +9,7 @@ export class PollService {
     Twitter: any;
     client: any;
     params: any;
-    constructor() {
+    constructor(private readonly ordersService: OrdersService) {
         this.Twitter = require('twitter');
         this.client = new this.Twitter({
             consumer_key: config.default.consumer_key,
@@ -43,9 +44,8 @@ export class PollService {
                         console.log("BUY SIGNAL!!!! [" + ticker + "]");
                         console.log("tweet id: " + tweets[0].id);
                         that.setSinceId(tweets[0].id);
+                        that.ordersService.buy(ticker);
                     }
-                } else {
-                    console.log('No tweets.');
                 }
             } else {
                 console.log('Error: ' + error);
