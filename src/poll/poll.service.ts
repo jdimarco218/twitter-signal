@@ -43,7 +43,7 @@ export class PollService {
                     if (allowed_tickers.indexOf(ticker) > -1 && tweetText.indexOf('Buy') > -1) {
                         console.log("BUY SIGNAL!!!! [" + ticker + "]");
                         console.log("tweet id: " + tweets[0].id);
-                        that.setSinceId(tweets[0].id);
+                        that.setSinceId(tweets[0].id + 10000);
                         that.ordersService.buy(ticker);
                     }
                 }
