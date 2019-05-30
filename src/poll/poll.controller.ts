@@ -24,7 +24,7 @@ export class PollController {
     stopPoll(): string {
         console.log('Stopping poll');
         this.isPolling = false;
-        return this.pollService.startPoll();
+        return this.pollService.stopPoll();
     }
 
 }
